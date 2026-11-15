@@ -418,6 +418,14 @@ class Ship {
     return [new Bullet(ox, oy, this.angle)];
   }
 
+  tryShootAllDirections() {
+    if (this.shootCooldown > 0 || this.dead) return [];
+    this.shootCooldown = 0.2;
+    return Array.from({ length: 8 }, (_, i) =>
+      new Bullet(this.x, this.y, this.angle + i * Math.PI / 4)
+    );
+  }
+
   draw() {
     if (this.dead) return;
 
@@ -613,6 +621,9 @@ function update(dt) {
   // Disparar
   if (pressed('Space')) {
     bullets.push(...ship.tryShoot());
+  }
+  if (pressed('KeyB')) {
+    bullets.push(...ship.tryShootAllDirections());
   }
 
   // Cambiar de skin (tecla S)
